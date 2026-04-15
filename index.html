@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+        24-Hour to 12-Hour Time Converter - Web Demo
+        By Oudom Thach - Version 4/15/2026
+        Computer Science II - Project Lab 7
+
+        This is the web implementation of the C++ TimeConverter program.
+        It uses the same validation logic, same conversion logic, and
+        produces the same output and error messages.
+
+        Files:
+          index.html  - Page structure (this file)
+          style.css   - All styling and animations
+          script.js   - Conversion logic and UI interaction
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24-Hour to 12-Hour Time Converter</title>
+
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header: title and instructions -->
+    <div class="header">
+        <span class="clock-icon">&#128336;</span>
+        <h1>24-Hour to 12-Hour Time Converter</h1>
+        <p>Enter a time in 24-hour format (HH:MM) to convert</p>
+    </div>
+
+    <!-- Input: where the user types the 24-hour time -->
+    <div class="input-group">
+        <div class="input-wrapper">
+            <input
+                type="text"
+                id="timeInput"
+                placeholder="e.g. 13:07"
+                maxlength="5"
+                autocomplete="off"
+                autofocus
+            >
+        </div>
+    </div>
+
+    <!-- Convert Button: triggers handleConvert() in script.js -->
+    <button class="btn-convert" id="convertBtn" onclick="handleConvert()">
+        Convert Time
+    </button>
+
+    <!-- Result Box: shows the converted time or error message -->
+    <div class="result-box" id="resultBox">
+        <div class="result-label" id="resultLabel"></div>
+        <div class="error-type" id="errorType" style="display:none;"></div>
+        <div class="result-time" id="resultTime"></div>
+    </div>
+
+    <!-- Conversion Log: terminal-style history of all conversions -->
+    <div class="history-section">
+        <div class="history-header">
+            <h3>Conversion Log</h3>
+            <button class="btn-clear" id="clearBtn" onclick="clearHistory()">Clear</button>
+        </div>
+        <div class="terminal" id="terminal">
+            <div class="empty-history" id="emptyMsg">No conversions yet. Try one above!</div>
+        </div>
+    </div>
+
+    <!-- How to Test: collapsible section with testing instructions -->
+    <div class="test-section">
+        <button class="test-toggle" id="testToggle" onclick="toggleTestGuide()">
+            How to Test This Program
+            <span class="arrow">&#9660;</span>
+        </button>
+        <div class="test-content" id="testContent">
+
+            <!-- Web version instructions -->
+            <h4>Web Version</h4>
+            <ol>
+                <li>Type a 24-hour time in the input box above (e.g. <code>13:07</code>).</li>
+                <li>Click <strong>Convert Time</strong> or press <strong>Enter</strong>.</li>
+                <li>The 12-hour result appears below the button.</li>
+                <li>Try invalid inputs like <code>10:65</code> or <code>$$:87</code> to see error handling.</li>
+                <li>All conversions are logged in the <strong>Conversion Log</strong> terminal.</li>
+            </ol>
+
+            <!-- C++ version instructions -->
+            <h4 style="margin-top: 18px;">C++ Version</h4>
+            <ol>
+                <li>Open a terminal and navigate to the project folder.</li>
+                <li>Compile: <code>g++ -o TimeConverter TimeConverter.cpp -std=c++11</code></li>
+                <li>Run: <code>./TimeConverter</code> (Mac/Linux) or <code>TimeConverter.exe</code> (Windows).</li>
+                <li>Enter a time when prompted (e.g. <code>13:07</code>).</li>
+                <li>Type <code>y</code> to convert another time, or <code>n</code> to quit.</li>
+            </ol>
+
+            <!-- Test case table -->
+            <h4 style="margin-top: 18px;">Test Cases &amp; Expected Results</h4>
+            <table class="test-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Input</th>
+                        <th>Expected Output</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>13:07</td>
+                        <td>1:07 PM</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>0:00</td>
+                        <td>12:00 AM</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>12:00</td>
+                        <td>12:00 PM</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>23:59</td>
+                        <td>11:59 PM</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>9:05</td>
+                        <td>9:05 AM</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>10:65</td>
+                        <td class="error-expected">Error: Minutes must be 0-59</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>$$:87</td>
+                        <td class="error-expected">Error: Non-numeric characters</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>hello</td>
+                        <td class="error-expected">Error: Missing colon</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>:30</td>
+                        <td class="error-expected">Error: Missing hour or minute</td>
+                        <td class="pass">PASS</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer: author info and version -->
+    <div class="footer">
+        <strong>Oudom Thach</strong> &mdash; Version 4/15/2026<br>
+        Based on C++ Programming Project #1 (24-Hour Time Converter)<br>
+        Computer Science II &mdash; Project Lab 7
+    </div>
+
+</div>
+
+<!-- Link to external JavaScript (loaded after HTML so elements exist) -->
+<script src="script.js"></script>
+
+</body>
+</html>
