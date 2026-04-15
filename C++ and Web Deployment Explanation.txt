@@ -1,0 +1,372 @@
+================================================================================
+   C++ AND WEB DEPLOYMENT EXPLANATION
+   24-Hour to 12-Hour Time Converter
+================================================================================
+
+   By:        Oudom Thach
+   Version:   4/15/2026
+   Course:    Computer Science II
+   Project:   Project Lab 7
+   Source:    Programming Project #1, Page 923
+              "Problem Solving with C++" by Walter Savitch
+   Due:       11:59 PM - 04/16/2026
+   Status:    COMPLETED
+
+================================================================================
+
+
+--------------------------------------------------------------------------------
+ 1. PURPOSE
+--------------------------------------------------------------------------------
+
+The purpose of this project is to write a program that converts a time
+written in 24-hour format (like 13:07 or 23:59) to 12-hour format with
+AM/PM (like 1:07 PM or 11:59 PM).
+
+The main learning goal is to practice using custom EXCEPTION CLASSES.
+Specifically, we have to:
+
+  - Create a custom exception class called TimeFormatMistake
+  - Throw this exception when the user enters invalid input
+  - Catch the exception in main() so the program doesn't crash
+  - Keep the program running so the user can try again
+
+There are TWO versions in this project:
+
+  1. THE C++ VERSION (TimeConverter.cpp)
+     - The actual assignment submission
+     - Uses iostream, string, and stdexcept libraries
+     - Runs in a terminal/console window
+
+  2. THE WEB VERSION (Web Implementation folder)
+     - A bonus demo with a nice UI built in HTML/CSS/JavaScript
+     - Runs in a web browser
+     - Uses the same logic as the C++ version
+     - Made for showing/demoing the project to other people
+
+
+--------------------------------------------------------------------------------
+ 2. PROJECT FILES
+--------------------------------------------------------------------------------
+
+The Project 7 folder contains the following:
+
+   Project 7/
+   |
+   |-- TimeConverter.cpp                  <-- C++ source code (submission)
+   |-- Testing_Guide.txt                  <-- Detailed C++ testing guide
+   |-- C++ and Web Deployment             <-- This file (explains everything)
+   |       Explanation.txt
+   |
+   |-- Web Implementation/                <-- Web demo folder
+   |       |-- index.html                 <-- Page structure
+   |       |-- style.css                  <-- Styling and animations
+   |       |-- script.js                  <-- Conversion logic + UI
+
+The C++ submission is just the single .cpp file. The other files are
+support files for testing, documentation, and the bonus web demo.
+
+
+--------------------------------------------------------------------------------
+ 3. THE C++ VERSION - HOW IT WORKS
+--------------------------------------------------------------------------------
+
+The C++ program is organized into these sections:
+
+   A. INCLUDES
+      - <iostream>  for cin/cout
+      - <string>    for the string data type
+      - <stdexcept> so we can inherit from runtime_error
+
+   B. EXCEPTION CLASS: TimeFormatMistake
+      - Inherits from runtime_error
+      - Has a constructor that takes an error message
+      - Calling e.what() returns that message
+
+   C. FUNCTION PROTOTYPES (declared before main)
+      - getTime()         -> reads input from user
+      - validateTime()    -> checks if input is valid (throws if not)
+      - convertTo12Hour() -> does the actual math
+      - askToContinue()   -> asks if user wants to go again
+
+   D. main()
+      - Shows a banner
+      - Uses a do-while loop:
+          1. Get input
+          2. try { validate + convert + show result }
+          3. catch (TimeFormatMistake) { show error message }
+          4. Ask "convert another? (y/n)"
+      - Loops until user types 'n'
+
+   E. FUNCTION IMPLEMENTATIONS
+      - The actual code for each function (separated from prototypes
+        as required by the assignment instructions).
+
+
+--------------------------------------------------------------------------------
+ 4. THE C++ VERSION - HOW TO COMPILE AND RUN
+--------------------------------------------------------------------------------
+
+STEP 1: Open a terminal
+   - Windows:    Command Prompt or PowerShell
+   - Mac/Linux:  Terminal
+
+STEP 2: Navigate to the Project 7 folder
+   Example:
+      cd "C:\Users\YourName\Downloads\Computer Science II\Project Lab 7\Project 7"
+
+STEP 3: Compile the program with g++
+      g++ -o TimeConverter TimeConverter.cpp -std=c++11
+
+   If there are no errors, this creates a file called TimeConverter.exe
+   (on Windows) or TimeConverter (on Mac/Linux).
+
+STEP 4: Run the program
+   - Windows:     TimeConverter.exe
+   - Mac/Linux:   ./TimeConverter
+
+STEP 5: Use the program
+   - Type a time like 13:07 and press Enter
+   - The program shows the 12-hour version
+   - Type 'y' to convert another, or 'n' to quit
+
+
+--------------------------------------------------------------------------------
+ 5. THE C++ VERSION - HOW TO TEST
+--------------------------------------------------------------------------------
+
+To make sure the program works correctly, run it and try each of these
+test cases. After every conversion, type 'y' to continue.
+
+   #   INPUT     EXPECTED OUTPUT                              RESULT
+   --  --------  -------------------------------------------  ------
+   1   13:07     1:07 PM                                      PASS
+   2   0:00      12:00 AM                                     PASS
+   3   12:00     12:00 PM                                     PASS
+   4   23:59     11:59 PM                                     PASS
+   5   9:05      9:05 AM                                      PASS
+   6   10:65     ERROR: Minutes must be 0-59                  PASS
+   7   $$:87     ERROR: Non-numeric characters in hours       PASS
+   8   hello     ERROR: Missing colon                         PASS
+   9   :30       ERROR: Missing hour or minute                PASS
+   10  n         (program exits with goodbye message)         PASS
+
+What each test proves:
+
+   Test 1:  Standard PM conversion (subtract 12, add PM)
+   Test 2:  Midnight edge case (0 -> 12 AM)
+   Test 3:  Noon edge case (12 stays 12 but switches to PM)
+   Test 4:  Last minute of the day (max valid time)
+   Test 5:  Leading zero on minutes less than 10
+   Test 6:  Range checking on minutes
+   Test 7:  Character validation on hours
+   Test 8:  Detects missing colon separator
+   Test 9:  Detects empty hour or minute portion
+   Test 10: Program exits cleanly when user says no
+
+ALL 10 TEST CASES PASSED.
+The program correctly handles every valid time AND throws/catches
+TimeFormatMistake for every type of bad input.
+
+For more details on testing, see the Testing_Guide.txt file.
+
+
+--------------------------------------------------------------------------------
+ 6. THE WEB VERSION - WHAT IT IS
+--------------------------------------------------------------------------------
+
+The Web Implementation folder contains a bonus web version of the same
+program. It does the EXACT same thing as the C++ program -- same
+validation, same conversion, same error messages -- but with a nice
+graphical interface that runs in a browser.
+
+This is meant for DEMOING the project. You can show it to other people
+without making them install a C++ compiler.
+
+The web version is split into 3 separate files (the proper way to
+build a website):
+
+   index.html  -> The page structure (HTML elements)
+   style.css   -> All the styling, colors, fonts, animations
+   script.js   -> The conversion logic and user interaction
+
+Why split it up?
+   - Cleaner and easier to read
+   - Standard practice in web development
+   - Each file has one clear job (separation of concerns)
+   - Matches how the C++ keeps prototypes separate from implementations
+
+
+--------------------------------------------------------------------------------
+ 7. THE WEB VERSION - FEATURES
+--------------------------------------------------------------------------------
+
+   - Modern dark theme with glassmorphism (frosted glass effect)
+   - Animated background gradient
+   - Big input box with smooth focus transitions
+   - Convert button with hover and click effects
+   - Result box that slides in with animation
+   - Color-coded results: green for success, red for errors
+   - Live "Conversion Log" terminal that shows the history of all
+     conversions (just like the C++ console output)
+   - "How to Test This Program" collapsible section with full
+     instructions for both web and C++ versions
+   - Test case table built right into the page
+   - Press Enter to convert (no need to click the button)
+   - Empty input shakes the input field as a hint
+   - Fully responsive (works on mobile too)
+   - Author credit and version in the footer
+
+
+--------------------------------------------------------------------------------
+ 8. THE WEB VERSION - HOW IT MIRRORS THE C++
+--------------------------------------------------------------------------------
+
+The script.js file has the same functions as the C++ version:
+
+   C++ Function              JavaScript Equivalent
+   -----------------------   -----------------------
+   class TimeFormatMistake   class TimeFormatMistake extends Error
+   validateTime()            function validateTime()
+   convertTo12Hour()         function convertTo12Hour()
+   try/catch in main()       try/catch in handleConvert()
+
+The error messages are EXACTLY the same in both versions. For example:
+
+   Input: 10:65
+   C++ Output:  TimeFormatMistake: Minutes must be 0-59. You entered 65.
+   Web Output:  TimeFormatMistake: Minutes must be 0-59. You entered 65.
+
+   Input: $$:87
+   C++ Output:  TimeFormatMistake: "$$:87" is not a valid time.
+                Non-numeric characters found in hours.
+   Web Output:  TimeFormatMistake: "$$:87" is not a valid time.
+                Non-numeric characters found in hours.
+
+So if your professor or anyone wants to verify the web version produces
+the same results as the C++ version, they will -- byte for byte.
+
+
+--------------------------------------------------------------------------------
+ 9. THE WEB VERSION - HOW TO RUN IT
+--------------------------------------------------------------------------------
+
+OPTION A: Just open the file in your browser (easiest)
+   1. Go to the Web Implementation folder
+   2. Double-click index.html
+   3. Your default web browser will open the page
+   4. That's it -- no server needed
+
+OPTION B: Use a local web server (more "official")
+   1. Make sure you have Node.js installed
+   2. Open a terminal in the Project 7 folder
+   3. Run: npx http-server "Web Implementation" -p 5500
+   4. Open http://localhost:5500 in your browser
+
+OPTION C: Use VS Code Live Server extension
+   1. Install "Live Server" extension in VS Code
+   2. Open the Web Implementation folder in VS Code
+   3. Right-click index.html -> "Open with Live Server"
+   4. Browser opens automatically
+
+Either way, the page works the same.
+
+
+--------------------------------------------------------------------------------
+ 10. THE WEB VERSION - HOW TO TEST IT
+--------------------------------------------------------------------------------
+
+Once the page is open in your browser:
+
+   1. You'll see a dark page with a clock icon and the title
+      "24-Hour to 12-Hour Time Converter"
+
+   2. There's an input box in the middle. Click it and type a time
+      in 24-hour format. Examples to try:
+
+         13:07    -> should show "1:07 PM"
+         0:00     -> should show "12:00 AM"
+         12:00    -> should show "12:00 PM"
+         23:59    -> should show "11:59 PM"
+         9:05     -> should show "9:05 AM"
+
+   3. Press Enter or click the "Convert Time" button.
+
+   4. The result appears below in a green box.
+
+   5. Now try invalid inputs to see the error handling:
+
+         10:65    -> "Minutes must be 0-59. You entered 65."
+         $$:87    -> "Non-numeric characters found in hours."
+         hello    -> "Invalid format. Expected HH:MM (missing colon)."
+         :30      -> "Invalid format. Expected HH:MM (missing hour
+                      or minute)."
+
+   6. The errors appear in a red box. The program does NOT crash.
+
+   7. All your conversions are saved in the "Conversion Log" terminal
+      below the result box. Each entry has a number like [1], [2], [3].
+
+   8. Click "Clear" to wipe the log.
+
+   9. Click "How to Test This Program" at the bottom to expand a
+      section with full instructions and a test case table.
+
+   10. The footer shows "Oudom Thach -- Version 4/15/2026".
+
+
+--------------------------------------------------------------------------------
+ 11. ASSIGNMENT INSTRUCTIONS (ORIGINAL TEXT)
+--------------------------------------------------------------------------------
+
+These are the requirements that were given for this project:
+
+   "Complete Programming Project #1 on page 923. Converts 24 hour time
+    to 12 hour time. Submit one .cpp file, but make sure the method
+    prototypes are separate from method implementations.
+
+    Write a program that converts 24-hour time to 12-hour time.
+    Ex. 13:07 translates to 1:07 PM. You are to define an exception
+    class called TimeFormatMistake. If the user enters an illegal time
+    like 10:65 or $$:87, then your program will throw and catch a
+    TimeFormatMistake and continue until the user decides to quit."
+
+   Due date: 11:59 PM - 04/16/2026
+
+CHECKLIST -- DID I MEET ALL THE REQUIREMENTS?
+
+   [DONE]  Submit one .cpp file
+   [DONE]  Method prototypes separate from method implementations
+   [DONE]  Converts 24-hour time to 12-hour time
+   [DONE]  Example 13:07 -> 1:07 PM works correctly
+   [DONE]  Defined TimeFormatMistake exception class
+   [DONE]  Throws TimeFormatMistake on bad input (10:65, $$:87, etc.)
+   [DONE]  Catches the exception (program doesn't crash)
+   [DONE]  Continues until the user decides to quit
+   [DONE]  Code is well-commented
+   [DONE]  High quality, organized code
+
+Everything required is done. The web demo is bonus extra work.
+
+
+--------------------------------------------------------------------------------
+ 12. SUMMARY
+--------------------------------------------------------------------------------
+
+   - C++ submission file:  TimeConverter.cpp
+   - Compiles cleanly with g++ (C++11 standard)
+   - All 10 test cases pass
+   - Custom TimeFormatMistake exception class works correctly
+   - Method prototypes separated from implementations (assignment requirement)
+   - Bonus web demo in Web Implementation folder uses the same exact logic
+   - Web demo split into 3 files: index.html, style.css, script.js
+   - Modern dark UI suitable for demoing
+   - Full test case table built into the web page
+
+Project complete and ready to submit.
+
+
+================================================================================
+   By Oudom Thach - 4/15/2026
+   Computer Science II - Project Lab 7
+================================================================================

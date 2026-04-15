@@ -1,0 +1,210 @@
+================================================================================
+  24-Hour to 12-Hour Time Converter - Testing Guide
+  By Oudom Thach
+  Version: 4/15/2026
+  Computer Science II - Project Lab 7
+================================================================================
+
+
+WHAT THIS PROGRAM DOES
+----------------------
+This program takes a time in 24-hour format (like 13:07 or 23:59) and
+converts it to 12-hour format with AM/PM (like 1:07 PM or 11:59 PM).
+
+If you type in something invalid -- like "10:65" where the minutes are too
+high, or "$$:87" with weird symbols -- the program doesn't crash. Instead,
+it throws a custom exception called TimeFormatMistake, catches it, shows
+you a helpful error message, and lets you try again.
+
+You can keep converting as many times as you want. Just type 'y' to go
+again or 'n' to quit.
+
+
+HOW THE CODE IS ORGANIZED
+-------------------------
+The program has one .cpp file with everything in it:
+
+  1. TimeFormatMistake class (lines 18-26)
+     - This is our custom exception. It inherits from runtime_error so we
+       can use throw/catch with it. When we create one, we pass in an error
+       message that explains what went wrong.
+
+  2. Function prototypes (lines 32-42)
+     - These are declared before main() so the compiler knows about them.
+     - getTime()        -> asks the user for input
+     - validateTime()   -> checks if the input is valid
+     - convertTo12Hour() -> does the actual conversion math
+     - askToContinue()  -> asks if the user wants to go again
+
+  3. main() function (lines 49-87)
+     - This is where the program starts. It has a do-while loop that:
+       a) Gets input from the user
+       b) Tries to validate and convert it (inside a try block)
+       c) If something is wrong, the catch block handles the error
+       d) Asks if the user wants to continue
+
+  4. Function implementations (lines 93-end)
+     - The actual code for each function, separated from the prototypes
+       as required by the assignment.
+
+
+HOW TO COMPILE AND RUN
+----------------------
+Step 1: Open a terminal.
+        - On Windows: open Command Prompt or PowerShell
+        - On Mac/Linux: open Terminal
+
+Step 2: Navigate to the folder where TimeConverter.cpp is saved.
+        Example:
+            cd "C:\Users\YourName\Project 7"
+
+Step 3: Compile the program with g++.
+        Type this command and press Enter:
+            g++ -o TimeConverter TimeConverter.cpp -std=c++11
+
+        If there are no errors, it will create an executable file.
+
+Step 4: Run the program.
+        - On Windows:    TimeConverter.exe
+        - On Mac/Linux:  ./TimeConverter
+
+Step 5: The program will show a banner and ask you to enter a time.
+        Type a time like 13:07 and press Enter.
+
+Step 6: It will show the converted time. Then it asks if you want to
+        convert another time. Type 'y' for yes or 'n' for no.
+
+
+HOW TO TEST
+-----------
+To test the program, just run it and try each input from the table below.
+After each one, type 'y' to continue. For the very last test, type 'n'
+to make sure the program exits properly.
+
+Check that your output matches what's listed in the "Expected Output" column.
+
+
+TEST CASES AND RESULTS
+----------------------
+
+Test 1: Regular afternoon time
+  Input:    13:07
+  Expected: 13:07 is 1:07 PM in 12-hour format.
+  What it tests: Basic conversion where hours > 12 (subtract 12, add PM)
+  Result:   PASS
+
+Test 2: Midnight (tricky edge case)
+  Input:    0:00
+  Expected: 0:00 is 12:00 AM in 12-hour format.
+  What it tests: Hour 0 is a special case -- it becomes 12 AM, not 0 AM
+  Result:   PASS
+
+Test 3: Noon (another edge case)
+  Input:    12:00
+  Expected: 12:00 is 12:00 PM in 12-hour format.
+  What it tests: Hour 12 stays as 12 but gets PM (not AM)
+  Result:   PASS
+
+Test 4: Last minute of the day
+  Input:    23:59
+  Expected: 23:59 is 11:59 PM in 12-hour format.
+  What it tests: The highest valid time (23 hours, 59 minutes)
+  Result:   PASS
+
+Test 5: Morning time with single-digit minutes
+  Input:    9:05
+  Expected: 9:05 is 9:05 AM in 12-hour format.
+  What it tests: Minutes under 10 should display with a leading zero (05, not 5)
+  Result:   PASS
+
+Test 6: Minutes out of range
+  Input:    10:65
+  Expected: TimeFormatMistake: Minutes must be 0-59. You entered 65.
+  What it tests: Minutes can only be 0-59. 65 is too high, so it throws an error.
+  Result:   PASS (exception was caught, program kept running)
+
+Test 7: Non-numeric characters (symbols)
+  Input:    $$:87
+  Expected: TimeFormatMistake: "$$:87" is not a valid time.
+            Non-numeric characters found in hours.
+  What it tests: The program checks each character. $$ are not digits, so error.
+  Result:   PASS (exception was caught, program kept running)
+
+Test 8: Completely wrong format (no colon)
+  Input:    hello
+  Expected: TimeFormatMistake: Invalid format. Expected HH:MM (missing colon).
+  What it tests: Without a colon, the program can't split hours and minutes.
+  Result:   PASS (exception was caught, program kept running)
+
+Test 9: Missing the hour part
+  Input:    :30
+  Expected: TimeFormatMistake: Invalid format. Expected HH:MM
+            (missing hour or minute).
+  What it tests: There's a colon but nothing before it, so the hour is empty.
+  Result:   PASS (exception was caught, program kept running)
+
+Test 10: Quitting the program
+  Input:    n (when asked "Would you like to convert another time?")
+  Expected: Thank you for using the Time Converter. Goodbye!
+  What it tests: The program should exit cleanly when the user types 'n'.
+  Result:   PASS (program ended gracefully)
+
+
+FULL SAMPLE RUN (copy of actual terminal output)
+-------------------------------------------------
+========================================
+ 24-Hour to 12-Hour Time Converter
+========================================
+
+Enter a time in 24-hour format (HH:MM): 13:07
+13:07 is 1:07 PM in 12-hour format.
+Would you like to convert another time? (y/n): y
+
+Enter a time in 24-hour format (HH:MM): 0:00
+0:00 is 12:00 AM in 12-hour format.
+Would you like to convert another time? (y/n): y
+
+Enter a time in 24-hour format (HH:MM): 12:00
+12:00 is 12:00 PM in 12-hour format.
+Would you like to convert another time? (y/n): y
+
+Enter a time in 24-hour format (HH:MM): 23:59
+23:59 is 11:59 PM in 12-hour format.
+Would you like to convert another time? (y/n): y
+
+Enter a time in 24-hour format (HH:MM): 9:05
+9:05 is 9:05 AM in 12-hour format.
+Would you like to convert another time? (y/n): y
+
+Enter a time in 24-hour format (HH:MM): 10:65
+TimeFormatMistake: Minutes must be 0-59. You entered 65.
+Would you like to convert another time? (y/n): y
+
+Enter a time in 24-hour format (HH:MM): $$:87
+TimeFormatMistake: "$$:87" is not a valid time. Non-numeric characters found in hours.
+Would you like to convert another time? (y/n): y
+
+Enter a time in 24-hour format (HH:MM): hello
+TimeFormatMistake: Invalid format. Expected HH:MM (missing colon).
+Would you like to convert another time? (y/n): y
+
+Enter a time in 24-hour format (HH:MM): :30
+TimeFormatMistake: Invalid format. Expected HH:MM (missing hour or minute).
+Would you like to convert another time? (y/n): n
+
+Thank you for using the Time Converter. Goodbye!
+
+
+SUMMARY
+-------
+All 10 test cases passed. The program correctly:
+  - Converts valid 24-hour times to 12-hour format with AM/PM
+  - Handles edge cases like midnight (0:00 -> 12:00 AM) and noon (12:00 PM)
+  - Throws and catches TimeFormatMistake for all types of bad input
+  - Keeps running after errors so the user can try again
+  - Exits cleanly when the user chooses to quit
+
+================================================================================
+  End of Testing Guide
+  By Oudom Thach - 4/15/2026
+================================================================================
